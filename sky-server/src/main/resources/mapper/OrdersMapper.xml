@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.mapper.OrdersDao">
+    <select id="top10LimitNumDesc" resultType="Map">
+        SELECT
+        ordersDe.NAME AS name,
+        sum( ordersDe.number ) AS number
+        FROM
+        order_detail ordersDe
+        INNER JOIN orders orders ON ordersDe.order_id = orders.id
+        <where>
+            <if test="begin!=null">
+                and orders.order_time &gt;= #{begin}
+            </if>
+            <if test="end!=null">
+                and orders.order_time &lt;= #{end}
+            </if>
+        </where>
+        GROUP BY
+        NAME
+        ORDER BY
+        number DESC
+        limit #{limit}
+    </select>
+</mapper>
